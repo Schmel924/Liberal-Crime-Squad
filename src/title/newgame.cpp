@@ -779,21 +779,24 @@ vector<Impact> printQuestionsThenGatherImpacts(const vector<Question> allQuestio
 
 		int selection;
 		if (!choices) {
-			selection = LCSrandom(currentQuestion.choices.size());
-			printSingleQuestionAnswersFateDecides(currentQuestion, selection);
+			selection = LCSrandom(currentQuestion.choices.size()); //--this function returns values from 0 to 5
+			printSingleQuestionAnswersFateDecides(currentQuestion, selection); //--this function uses values from 0 to 5
 			pressAnyKey();
 		}
 		else {
 			printSingleQuestionAnswers(currentQuestion);
-			selection = getkeyAlt();
+			selection = getkeyAlt();   //--this function returns values from A to Z
 			// if selection is invalid, try again
 			while (selection - 'a' < 0 || currentQuestion.choices.size() <= (selection - 'a')) {
-				selection = getkeyAlt();
+				selection = getkeyAlt(); //--this function returns values from A to Z
 			}
 
 
 		}
-		for (Impact currentImpact : currentQuestion.choices[selection - 'a'].impact) {
+		for (Impact currentImpact : currentQuestion.choices[selection - 'a'].impact) { 
+			//--this function uses values from A to Z, but recieves 0 to 5 if !choices
+			//--<vector>[5-'a'] generates error in std library
+			//--i don't have solution yet, but i really want you to know about error
 			impactsToApply.push_back(currentImpact);
 		}
 		clearAlt();
