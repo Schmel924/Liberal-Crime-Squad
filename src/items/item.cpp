@@ -47,6 +47,7 @@ bool Item::sort_compare(Item *b, Item *a)
 }
 const char* Item::aan() const
 {
+	//chooses between 'a' and 'an' before noun
 	switch (get_name()[0])
 	{
 	case 'a': case 'A':
