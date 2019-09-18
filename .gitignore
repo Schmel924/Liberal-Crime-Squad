@@ -19,9 +19,24 @@ config.status
 config.h.in
 *~
 
+/workspaces/Debug/*
 /workspaces/Release/*.obj
 /workspaces/Release/*.tlog
 /workspaces/game.sdf
 /workspaces/game.v11.suo
 /workspaces/Release/*.pdb
 game.layout
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Liberal-Crime-Squad/v16/Browse.VC.db
+/.vs/Liberal-Crime-Squad/v16/.suo
+/workspaces/.vs/game/v16/.suo
+/workspaces/.vs/game/v16/ipch/AutoPCH/fae51fe81e2ed609/ACTIVATE.ipch
+/workspaces/.vs/game/v16/ipch/AutoPCH/d5a481319e532c44/CURSESALTERNATIVE.ipch
+/workspaces/.vs/game/v16/ipch/AutoPCH/c9afbbd3aeb017b4/NEWGAME.ipch
+/workspaces/.vs/game/v16/ipch/AutoPCH/a42f6e51d45f5efe/COMPAT.ipch
+/workspaces/.vs/game/v16/Browse.VC.opendb
+/workspaces/.vs/game/v16/Browse.VC.db
+/workspaces/gamelog.txt
+/workspaces/xmllog
