@@ -474,7 +474,7 @@ int main(int argc, char* argv[])
 	bool xml_loaded_ok = main_io_init();
 	main_logic_init();
 	// Main Loop
-	if (!mainSeven(xml_loaded_ok)) {
+	if (!xml_population(xml_loaded_ok)) {
 		// This function closes the entire program, and can be called anywhere
 		end_game(EXIT_FAILURE);
 	}

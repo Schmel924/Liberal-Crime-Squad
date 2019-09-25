@@ -328,7 +328,7 @@ void addCreatueVehiclesToCollection(DeprecatedCreature *cr[6], vector<Vehicle *>
 	}
 }
 
-bool mainSeven(bool xml_loaded_ok) {
+bool xml_population (bool xml_loaded_ok) {
 	xmllog.initialize(CONST_XMLLOG, true, 1);
 	xml_loaded_ok &= populate_from_xml(vehicletype, CONST_VEHICLES_XML, xmllog);
 	xml_loaded_ok &= populate_from_xml(cliptype, CONST_CLIPS_XML, xmllog);

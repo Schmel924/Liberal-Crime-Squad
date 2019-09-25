@@ -5845,7 +5845,7 @@ void initialize_debug_defines();
 const int CITY_NAMELEN = 80;
 
 
-bool mainSeven(bool xml_loaded_ok);
+bool xml_population (bool xml_loaded_ok);
 extern bool DISPLAYDEBUG;
 extern bool PERFECTLAWS;
 extern bool REVOLUTIONNOW;
