@@ -4860,8 +4860,8 @@ void printfunds(int y, int offsetx, const char* prefix, long funds)
 {
 	char moneystr[50], prefixbuffer[50];
 	if (prefix == NULL)
-		strncpy(prefixbuffer, BLANK_STRING.c_str(), 50);
-	else strncpy(prefixbuffer, prefix, 50);
+		strncpy_s(prefixbuffer,sizeof(prefixbuffer), BLANK_STRING.c_str(), strlen(BLANK_STRING.c_str()));
+	else strncpy_s(prefixbuffer, sizeof(prefixbuffer), prefix, strlen (prefix));
 	strcpy(moneystr, tostring(funds).data());
 	//Save screen coordinates for later.
 	int begy, begx;
