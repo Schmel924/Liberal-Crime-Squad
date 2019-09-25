@@ -61,118 +61,7 @@
 //possible bug with hauling people
 //somebody claims saving works only 3/4 of the time (no confirmation)
 //somebody claims squads don't move (sounds like older version bug, they haven't told me version)
-void mainOne() {
-	init_console(); // do this FIRST
-					//start curses
-	initscrAlt();
-	gamelog.initialize(GAMELOG_FILEPATH, OVERWRITE_GAMELOG, NEWLINEMODE_GAMELOG); //Initialize the gamelog (and also initialize artdir and homedir)
-	title_screen::getInstance();
-	CreaturePool::getInstance();
-	LocationsPool::getInstance();
-}
-void mainTwo() {
-	time_t t = time(0);
-	struct tm *now = localtime(&t); //Do not need to deallocate this. Statically allocated by system
-	char datetime[41];
-	sprintf(datetime, "ÄÄÄÄÄÄÄÄÄ%iÄ%02iÄ%02i %02i:%02i:%02iÄÄÄÄÄÄÄÄÄ\n\n\n",
-		now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec); //YYYY-MM-DD HH:MM:SS format
-	gamelog.log(string("\n\n\nÄÄÄÄÄÄÄÄÄÄ PROGRAM STARTED ÄÄÄÄÄÄÄÄÄÄ\n") + datetime);
-}
-void mainThree() {
-	music.play(MUSIC_TITLEMODE); // initialize music and play title mode song (do this BEFORE displaying anything on the screen, but AFTER initializing artdir and homedir)
-								 // set window title
-	char wtitle[50];
-	strcpy(wtitle, CONST_LIBERAL_CRIME_SQUAD);
-	strcat(wtitle, PACKAGE_VERSION_STR.c_str());
-	set_title(wtitle);
-}
-
 int oldMapMode = 0; // -1 if we're using the old map generation functions.
-void mainFour() {
-	noechoAlt();
-	//initialize curses color
-	start_colorAlt();
-	initMainRNG();
-	//initialize the array of color pairs
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			if (i == 0 && j == 0)
-			{
-				init_pairAlt(7 * 8, 0, 0);
-				continue;
-			}
-			if (i == 7 && j == 0) continue;
-			init_pairAlt(i * 8 + j, i, j);
-		}
-	//turns off cursor
-	curs_setAlt(0);
-	//begin the game loop
-	keypadAlt(TRUE);
-	raw_outputAlt(TRUE);
-	//Loading Graphics...
-	loadgraphics();
-	//Loading Init File Options...
-	loadinitfile();
-	//Loading sitemaps.txt...
-	oldMapMode = !readConfigFile(CONST_SITEMAPS_TXT); // load site map data
-	if (oldMapMode)
-	{
-		addstrAlt(failedToLoadSitemaps, gamelog);
-		gamelog.nextMessage();
-		pressAnyKey();
-	}
-	//Setting initial game data...
-}
-void mainFive() {
-	//Initialize sorting choices.
-	for (int s = 0; s < SORTINGCHOICENUM; s++)
-		activesortingchoice[s] = SORTING_NONE;
-	for (int v = 0; v < VIEWNUM; v++)
-	{
-		attitude[v] = 30 + LCSrandom(25);
-		public_interest[v] = 0;
-		background_liberal_influence[v] = 0;
-	}
-	attitude[VIEW_LIBERALCRIMESQUAD] = 0;
-	attitude[VIEW_LIBERALCRIMESQUADPOS] = 5;
-	//attitude[VIEW_POLITICALVIOLENCE]=5;
-	if (REVOLUTIONNOW) {
-		for (int v = 0; v < VIEWNUM; v++)
-			attitude[v] = 100;
-	}
-	if (SHITLAWS) {
-		for (int l = 0; l < LAWNUM; l++) { lawList[l] = -2; }
-	}
-	else
-		if (PERFECTLAWS) {
-			for (int l = 0; l < LAWNUM; l++) { lawList[l] = 2; }
-		}
-		else {
-			lawList[LAW_ABORTION] = 1;
-			lawList[LAW_ANIMALRESEARCH] = -1;
-			lawList[LAW_POLICEBEHAVIOR] = -1;
-			lawList[LAW_PRIVACY] = -1;
-			lawList[LAW_DEATHPENALTY] = -1;
-			lawList[LAW_NUCLEARPOWER] = -1;
-			lawList[LAW_POLLUTION] = -1;
-			lawList[LAW_LABOR] = 0;
-			lawList[LAW_GAY] = 1;
-			lawList[LAW_CORPORATE] = 0;
-			lawList[LAW_FREESPEECH] = 0;
-			lawList[LAW_FLAGBURNING] = 1;
-			lawList[LAW_GUNCONTROL] = -1;
-			lawList[LAW_TAX] = 0;
-			lawList[LAW_WOMEN] = 1;
-			lawList[LAW_CIVILRIGHTS] = 1;
-			lawList[LAW_DRUGS] = -1;
-			lawList[LAW_IMMIGRATION] = 0;
-			lawList[LAW_ELECTIONS] = 0;
-			lawList[LAW_MILITARY] = -1;
-			lawList[LAW_PRISONS] = 0;
-			lawList[LAW_TORTURE] = -1;
-		}
-}
 const string blankString = "";
 string fixLineSpecialCharacter(char * toFix) {
 	string str = blankString;
@@ -460,7 +349,118 @@ void initiateExec() {
 		strcpy(execname[e], (fn.first + " " + fn.last).data());
 	}
 }
-void mainSix() {
+bool main_io_init()
+{
+	init_console(); // do this FIRST
+				//start curses
+	initscrAlt();
+	gamelog.initialize(GAMELOG_FILEPATH, OVERWRITE_GAMELOG, NEWLINEMODE_GAMELOG); //Initialize the gamelog (and also initialize artdir and homedir)
+	music.play(MUSIC_TITLEMODE); // initialize music and play title mode song (do this BEFORE displaying anything on the screen, but AFTER initializing artdir and homedir)
+								 // set window title
+	char wtitle[50];
+	strcpy(wtitle, CONST_LIBERAL_CRIME_SQUAD);
+	strcat(wtitle, PACKAGE_VERSION_STR.c_str());
+	set_title(wtitle);
+	noechoAlt();
+	//initialize curses color
+	start_colorAlt();
+	initMainRNG();
+	//initialize the array of color pairs
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (i == 0 && j == 0)
+			{
+				init_pairAlt(7 * 8, 0, 0);
+				continue;
+			}
+			if (i == 7 && j == 0) continue;
+			init_pairAlt(i * 8 + j, i, j);
+		}
+	//turns off cursor
+	curs_setAlt(0);
+	//begin the game loop
+	keypadAlt(TRUE);
+	raw_outputAlt(TRUE);
+	//Loading Graphics...
+	loadgraphics();
+	//Loading Init File Options...
+	loadinitfile();
+	initialize_debug_defines();
+	bool xml_loaded_ok = initialize_txt();
+	if (!xml_loaded_ok) {
+		mvaddstrAlt(0, 0, CONST_UNSPECIFIED_ERROR_WITH_CUSTOM_TEXT);
+		pressAnyKey();
+	}
+	return xml_loaded_ok;
+}
+void main_logic_init()
+{
+	title_screen::getInstance();
+	CreaturePool::getInstance();
+	LocationsPool::getInstance();
+	time_t t = time(0);
+	struct tm* now = localtime(&t); //Do not need to deallocate this. Statically allocated by system
+	char datetime[41];
+	sprintf(datetime, "ÄÄÄÄÄÄÄÄÄ%iÄ%02iÄ%02i %02i:%02i:%02iÄÄÄÄÄÄÄÄÄ\n\n\n",
+		now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec); //YYYY-MM-DD HH:MM:SS format
+	gamelog.log(string("\n\n\nÄÄÄÄÄÄÄÄÄÄ PROGRAM STARTED ÄÄÄÄÄÄÄÄÄÄ\n") + datetime);
+	//Loading sitemaps.txt...
+	oldMapMode = !readConfigFile(CONST_SITEMAPS_TXT); // load site map data
+	if (oldMapMode)
+	{
+		addstrAlt(failedToLoadSitemaps, gamelog);
+		gamelog.nextMessage();
+		pressAnyKey();
+	}
+	//Setting initial game data...
+	//Initialize sorting choices.
+	for (int s = 0; s < SORTINGCHOICENUM; s++)
+		activesortingchoice[s] = SORTING_NONE;
+	for (int v = 0; v < VIEWNUM; v++)
+	{
+		attitude[v] = 30 + LCSrandom(25);
+		public_interest[v] = 0;
+		background_liberal_influence[v] = 0;
+	}
+	attitude[VIEW_LIBERALCRIMESQUAD] = 0;
+	attitude[VIEW_LIBERALCRIMESQUADPOS] = 5;
+	//attitude[VIEW_POLITICALVIOLENCE]=5;
+	if (REVOLUTIONNOW) {
+		for (int v = 0; v < VIEWNUM; v++)
+			attitude[v] = 100;
+	}
+	if (SHITLAWS) {
+		for (int l = 0; l < LAWNUM; l++) { lawList[l] = -2; }
+	}
+	else
+		if (PERFECTLAWS) {
+			for (int l = 0; l < LAWNUM; l++) { lawList[l] = 2; }
+		}
+		else {
+			lawList[LAW_ABORTION] = 1;
+			lawList[LAW_ANIMALRESEARCH] = -1;
+			lawList[LAW_POLICEBEHAVIOR] = -1;
+			lawList[LAW_PRIVACY] = -1;
+			lawList[LAW_DEATHPENALTY] = -1;
+			lawList[LAW_NUCLEARPOWER] = -1;
+			lawList[LAW_POLLUTION] = -1;
+			lawList[LAW_LABOR] = 0;
+			lawList[LAW_GAY] = 1;
+			lawList[LAW_CORPORATE] = 0;
+			lawList[LAW_FREESPEECH] = 0;
+			lawList[LAW_FLAGBURNING] = 1;
+			lawList[LAW_GUNCONTROL] = -1;
+			lawList[LAW_TAX] = 0;
+			lawList[LAW_WOMEN] = 1;
+			lawList[LAW_CIVILRIGHTS] = 1;
+			lawList[LAW_DRUGS] = -1;
+			lawList[LAW_IMMIGRATION] = 0;
+			lawList[LAW_ELECTIONS] = 0;
+			lawList[LAW_MILITARY] = -1;
+			lawList[LAW_PRISONS] = 0;
+			lawList[LAW_TORTURE] = -1;
+		}
 	initiateSenate();
 	initiateHouse();
 	initiateCourt();
@@ -471,18 +471,8 @@ void mainSix() {
 }
 int main(int argc, char* argv[])
 {
-	mainOne();
-	mainTwo();
-	initialize_debug_defines();
-	bool xml_loaded_ok = initialize_txt();
-	if (!xml_loaded_ok) {
-		mvaddstrAlt(0, 0, CONST_UNSPECIFIED_ERROR_WITH_CUSTOM_TEXT);
-		pressAnyKey();
-	}
-	mainThree();
-	mainFour();
-	mainFive();
-	mainSix();
+	bool xml_loaded_ok = main_io_init();
+	main_logic_init();
 	// Main Loop
 	if (!mainSeven(xml_loaded_ok)) {
 		// This function closes the entire program, and can be called anywhere
